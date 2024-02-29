@@ -1,594 +1,372 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>作品集展示</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <style>
-    body {
-        margin: 0;
-        min-width: 250px;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    .header {
-        background-color: #2571c8;
-        padding: 20px 40px;
-        color: #fff;
-        text-align: center;
-        font-size: large;
-        margin-top: -25px;
-    }
-
-    .header::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    input {
-        margin: 0;
-        border: none;
-        width: 75%;
-        padding: 10px;
-        float: left;
-        font-size: 16px;
-    }
-
-    .addBtn {
-        padding: 10px;
-        width: 25%;
-        background: #d9d9d9;
-        color: #555;
-        float: left;
-        text-align: center;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.3;
-    }
-
-    .addBtn:hover {
-        background-color: #bbb;
-    }
-
-
-    ul {
+    body,
+    html {
         margin: 0;
         padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        color: #333;
+        background-color: #f4f4f4;
     }
 
-    ul li {
-        cursor: pointer;
+    #navbar ul {
+        display: flex;
+        justify-content: space-around;
+        list-style: none;
+        background-color: #8C746A;
+        padding: 10px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+    #navbar li a {
+        color: white;
+        text-decoration: none;
+        transition: transform 0.3s, background-color 0.3s;
+    }
+
+    #navbar li a:hover {
+        transform: scale(1.1);
+        background-color: #7a6458;
+    }
+
+    #slider {
         position: relative;
-        padding: 12px 8px 12px 40px;
-        list-style-type: none;
-        background: #eee;
-        font-size: 18px;
-        transition: 0.2;
+        width: 45%;
+        height: 60%;
+        /* 使展示框的高度為視窗高度的一半 */
+        margin: 20px auto;
+        overflow: hidden;
+        background: #d3baba;
     }
 
-    ul li:nth-child(odd) {
-        background: #f9f9f9;
-    }
-
-    ul li:hover {
-        background: #ddd;
-    }
-
-    ul li.checked {
-        background: #888;
-        color: #fff;
-        text-decoration: line-through;
-    }
-
-    ul li.checked::before {
-        content: "V";
+    .slides img {
+        height: 100%;
+        width: 100%;
+        /* 确保图片铺满整个slider */
         position: absolute;
-        top: 10px;
-        left: 16px;
+        /* 使图片绝对定位于slider内 */
+        /* 默认图片透明 */
+        transition: opacity 2s ease-in-out;
+        /* 平滑的透明度过渡 */
     }
 
-    .link {
-        width: 25%;
-        height: 50px;
-        color: #425a75;
-        padding: 10px;
-        background: #d9d9d9;
-        float: left;
-        text-align: center;
-        font-size: 16px;
+    .slides img:first-child {
+        display: block;
+        opacity: 1;
+        /* 第一张图片默认显示 */
+    }
+
+    .prev,
+    .next {
         cursor: pointer;
-        transition: 0.3;
-    }
-
-    .box {
-        width: 75%;
-        height: 50px;
-        position: right;
-        margin: 0;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        color: #333;
+        background-color: #ddd;
         border: none;
-        width: 75%;
-        padding: 10px;
-        float: left;
-        font-size: 16px;
-        background: #f6f5f5;
     }
 
-    .txt {
-        padding-left: 80px;
-        font-size: 20px;
+    .prev {
+        left: 10px;
     }
 
-    .link2 {
-        width: 120px;
-        height: 50px;
-        color: #425a75;
-        background: #d9d9d9;
-        float: left;
+    .next {
+        right: 10px;
+    }
+
+    #categories {
+        display: flex;
+        justify-content: space-around;
+        padding-left: 20%;
+        /* 最左面的长方形与左侧边界保持三分之一画面宽度的间距 */
+        padding-right: 20%;
+        /* 最右面的长方形与右侧边界保持三分之一画面宽度的间距 */
+        padding-top: 10%;
+        padding-bottom: 10%;
+        flex-wrap: wrap;
         text-align: center;
-        margin: 5px 0%;
-        font-size: 20px;
-        cursor: pointer;
-        transition: 0.3;
-        border-radius: 12px;
+        font-size: 150px;
+        color: #333;
     }
 
-    .link25 {
-        width: 110px;
-        height: 110px;
-        color: #425a75;
-        background: rgb(127, 205, 236);
-        float: left;
+    footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        /* 其余样式保持不变 */
+    }
+
+    .category {
+        height: 480px;
+        /* 高度放大一倍 */
+        width: 240px;
+        /* 宽度等比例放大 */
+        margin: 0 1%;
+        /* 长方形之间的间隔减少三倍 */
+        background-color: #CDBA96;
         text-align: center;
-        margin: -35px -40px;
-        font-size: 25px;
         cursor: pointer;
-        transition: 0.3;
-        border-radius: 50px;
     }
 
-    .link3 {
-        width: 120px;
-        height: 50px;
-        color: #425a75;
-        background: #d9d9d9;
-        float: right;
+    footer {
+        display: flex;
+        justify-content: space-around;
+        background-color: #8C746A;
+        color: white;
         text-align: center;
-        margin: -72px 0%;
-        font-size: 20px;
-        cursor: pointer;
-        transition: 0.3;
-        border-radius: 12px;
+        padding: 10px 0;
+        position:
+            fixed;
+        bottom: 0;
+        width: 100%;
     }
 
-    #red {
-        color: red
+    body {
+        padding-top: 60px;
+        padding-bottom: 60px;
     }
 
-    #blue {
-        color: rgb(215, 215, 255);
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 20px, 0);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    .fadeInUp {
+        animation-name: fadeInUp;
+        animation-duration: 1s;
+        animation-fill-mode: both;
+    }
+
+    .hidden {
+        visibility: hidden;
+    }
+
+    .imgleft {
+        margin-left: 13%;
+        margin-top: 50px;
+        width: 30%;
+        height: 30%;
+    }
+
+    .text {
+        font-size: 50px;
+        margin-left: 13%;
+        margin-top: 200px;
+    }
+
+    .content {
+        margin-left: 13%;
+    }
+
+    .title {
+        font-size: 90px;
+        text-align: center;
+
     }
 </style>
 
 <body>
-    <div id="app">
-        <button class="link25" @click="btn">.<p>....Hello</p></button>
+    <div id="home"></div>
+    <nav id="navbar">
+        <ul>
+            <li><a href="#home">首頁</a></li>
+            <li><a href="#portfolio">作品集</a></li>
+            <li><a href="#about">關於我</a></li>
+            <li><a href="#contact">聯絡方式</a></li>
+        </ul>
+    </nav>
+
+    <div id="slider">
+        <div class="slides">
+            <img src="./src/image1.jpg" alt="作品1">
+            <img src="./src/image2.jpg" alt="作品2">
+            <img src="./src/image3.jpg" alt="作品3">
+            <img src="./src/image4.jpg" alt="作品4">
+            <img src="./src/image5.jpg" alt="作品5">
+        </div> <a class="prev" onclick="changeSlide(-1)">&#10094;</a> <a class="next"
+            onclick="changeSlide(1)">&#10095;</a>
     </div>
-
-    <div id="app2">
-        <h1 v-if="awesome">
-            <div class="header">
-                <h1>学生资料(2023-2024)</h1>
-                <div>
-                    <textarea class="box">Text...</textarea>
-                    <button class="link">Click</button>
-                </div>
-            </div>
-
-
-            <div id="app" class="header">
-                <button class="link2" @click="btn">noting here</button>
-            </div>
-
-
-            <div id="app2">
-                <div class="header"><button class="link3" @click="toggle">简转繁</button></div>
-
-                <ul>
-                    <li>
-                        <h2>目录 :</h2>
-                    </li>
-                    <div class="txt"><a href="#aa">
-                            <h2>1).个人履历</h2>
-                        </a></div>
-                    <div class="txt"><a href="#bb">
-                            <h2>2).成绩表副本</h2>
-                        </a></div>
-                    <div class="txt"><a href="#cc">
-                            <h2>3).专业认证副本</h2>
-                        </a></div>
-                    <div class="txt"><a href="#dd">
-                            <h2>4).奖项证明副本</h2>
-                        </a></div>
-                </ul>
-
-                <ul>
-                    <div id="aa">
-                        <li>
-                            <h2>個人履歷 :</h2>
-                        </li>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/individual%20not%20detail.pdf">-个人履历(精简版)
-                            </a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/individual%20detail.pdf">-个人履历(详细版)</a>
-                        </h2>
-                    </div>
-                </ul>
-
-                <ul>
-                    <div id="bb">
-                        <li>
-                            <h2>成绩表副本 :</h2>
-                        </li>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/form5-6.pdf">-圣保禄学校高一二级成绩表</a>
-                        </h2>
-                    </div>
-                </ul>
-
-                <ul>
-                    <div id="cc">
-                        <li>
-                            <h2>专业认证副本 :</h2>
-                        </li>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20Excel%202019%20Associate.pdf">-2023年
-                                Microsoft 认证Excel 2019 Associate证书</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20PowerPoint%202019%20Associate.pdf">-2023年
-                                Microsoft 认证PowerPoint 2019 Associate证书</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20PowerPoint%202016%20Associate.pdf">-2023年
-                                Microsoft 认证PowerPoint 2016 Associate证书</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20PowerPoint%20Class.pdf">-2023年
-                                第十五届澳门学生Office软件技能比赛网上强化培训班-POWERPOINT证书</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20video.pdf">-2023年
-                                中华青年进步协会 短片创作训练班毕业证书</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20English%20ambassador%20certificate%20of%20completion.pdf">-2023年
-                                English ambassador certificate of completion</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2022%20advertisment.pdf">-2022年
-                                明日之星广告策划培训计划毕业证书</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2022%20teenager.pdf">-2022年
-                                青年义工基础培训课程(12小时) 修毕证明书</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/profession/2020%202020....pdf">-2020年
-                                2020成人宣誓日曁明日青年领袖培训计划参与及出席证书</a></h2>
-                    </div>
-                </ul>
-
-                <ul>
-                    <div id="dd">
-                        <li>
-                            <h2>奖项证明副本 :</h2>
-                        </li>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20four%20maga%20competition.pdf">-2023年
-                                澳门特别行政区海关「社区打假联络机制」成立七周年四格漫画比赛</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20mask%20competition.pdf">-2023年
-                                中华传统文化推广计画青少年创新手绘中华文化特色口罩创作比赛2-华艺风貌中学组 季军</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20police%203.pdf">-2023年
-                                「警察．形象」填色、绘画及口号比赛 三等奖</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20police%200.pdf">-2023年
-                                「警察．形象」填色、绘画及口号比赛 入围奖</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20FRA%20ANGELICO.pdf">-2023年
-                                澳门圣保禄学校校友奖学金 FRA ANGELICO安吉利科艺术奖</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20Superior%20Culture%20annuversity.pdf">-2023年
-                                Superior Culture上‧文化的周年绘画大赛2023冠军</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20Superior%20Culture%20blackwhite.pdf">-2023年
-                                Superior Culture 上‧文化的黑白绘画大赛2023亚军</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2022%20law.pdf">-2022
-                                澳门无疆界青年协会 的拥抱「基本法」抱枕绘画比赛 季军</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2022%20redbag.pdf">-2022
-                                年 「梦想童盟」的新春利是封设计比赛 入围奖</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2022%20people.pdf">-2022年
-                                《残疾人权利公约》填色比赛2022优异奖</a></h2>
-                    </div>
-                    <div class="txt">
-                        <h2><a
-                                href="file:///C:/Users/s56022/Desktop/student-information/competition/2021%20spirit.pdf">-2021年
-                                圣保禄学校保禄精神奖励计画 奖状</a></h2>
-                    </div>
-                </ul>
-            </div>
-        </h1>
-
-        <h1 v-if="!awesome">
-            <div>
-                <div class="header">
-                    <h1>學生資料(2023-2024)</h1>
-                    <div>
-                        <textarea class="box">Text...</textarea>
-                        <button class="link">Click</button>
-                    </div>
-                </div>
-
-                <div class="header">
-                    <div id="app">
-                        <button class="link2" @click="btn">noting here</button>
-                    </div>
-                </div>
-
-                <div id="app2">
-                    <div class="header"><button class="link3" @click="toggle">繁轉簡</button></div>
-
-                    <ul>
-                        <li>
-                            <h2>目錄 :</h2>
-                        </li>
-                        <div class="txt"><a href="#aa">
-                                <h2>1).個人履歷</h2>
-                            </a></div>
-                        <div class="txt"><a href="#bb">
-                                <h2>2).成績表副本</h2>
-                            </a></div>
-                        <div class="txt"><a href="#cc">
-                                <h2>3).專業認證副本</h2>
-                            </a></div>
-                        <div class="txt"><a href="#dd">
-                                <h2>4).獎項證明副本</h2>
-                            </a></div>
-                    </ul>
-
-                    <ul>
-                        <div id="aa">
-                            <li>
-                                <h2>個人履歷 :</h2>
-                            </li>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/individual%20not%20detail.pdf">-個人履歷(精簡版)</a>
-                            </h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/individual%20detail.pdf">-個人履歷(詳細版)</a>
-                            </h2>
-                        </div>
-                    </ul>
-
-                    <ul>
-                        <div id="bb">
-                            <li>
-                                <h2>成績表副本 :</h2>
-                            </li>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/form5-6.pdf">-聖保祿學校高一二級成績表</a>
-                            </h2>
-                        </div>
-                    </ul>
-
-                    <ul>
-                        <div id="cc">
-                            <li>
-                                <h2>專業認證副本 :</h2>
-                            </li>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20Excel%202019%20Associate.pdf">-2023年
-                                    Microsoft 認證Excel 2019 Associate證書</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20PowerPoint%202019%20Associate.pdf">-2023年
-                                    Microsoft 認證PowerPoint 2019 Associate證書</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20PowerPoint%202016%20Associate.pdf">-2023年
-                                    Microsoft 認證PowerPoint 2016 Associate證書</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20PowerPoint%20Class.pdf">-2023年
-                                    第十五屆澳門學生Office軟件技能比賽網上強化培訓班-POWERPOINT證書</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20video.pdf">-2023年
-                                    中華青年進步協會 短片創作訓練班畢業證書</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2023%20English%20ambassador%20certificate%20of%20completion.pdf">-2023年
-                                    English ambassador certificate of completion</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2022%20advertisment.pdf">-2022年
-                                    明日之星廣告策劃培訓計劃畢業證書</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2022%20teenager.pdf">-2022年
-                                    青年義工基礎培訓課程(12小時) 修畢證明書</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/profession/2020%202020....pdf">-2020年
-                                    2020成人宣誓日曁明日青年領袖培訓計劃參與及出席證書</a></h2>
-                        </div>
-                    </ul>
-
-                    <ul>
-                        <div id="dd">
-                            <li>
-                                <h2>獎項證明副本 :</h2>
-                            </li>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20four%20maga%20competition.pdf">-2023年
-                                    澳門特別行政區海關「社區打假聯絡機制」成立七周年四格漫畫比賽</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20mask%20competition.pdf">-2023年
-                                    中華傳統文化推廣計畫青少年創新手繪中華文化特色口罩創作比賽2-華藝風貌中學組 季軍</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20police%203.pdf">-2023年
-                                    「警察．形象」填色、繪畫及口號比賽 三等獎</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20police%200.pdf">-2023年
-                                    「警察．形象」填色、繪畫及口號比賽 入圍獎</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20FRA%20ANGELICO.pdf">-2023年
-                                    澳門聖保祿學校校友獎學金 FRA ANGELICO安吉利科藝術獎</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20Superior%20Culture%20annuversity.pdf">-2023年
-                                    Superior Culture上‧文化的周年繪畫大賽2023冠軍</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2023%20Superior%20Culture%20blackwhite.pdf">-2023年
-                                    Superior Culture 上‧文化的黑白繪畫大賽2023亞軍</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2022%20law.pdf">-2022
-                                    澳門無疆界青年協會 的擁抱「基本法」抱枕繪畫比賽 季軍</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2022%20redbag.pdf">-2022
-                                    年 「夢想童盟」的新春利是封設計比賽 入圍獎</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2022%20people.pdf">-2022年
-                                    《殘疾人權利公約》填色比賽2022優異獎</a></h2>
-                        </div>
-                        <div class="txt">
-                            <h2><a
-                                    href="file:///C:/Users/s56022/Desktop/student-information/competition/2021%20spirit.pdf">-2021年
-                                    聖保祿學校保祿精神獎勵計畫 獎狀</a></h2>
-                        </div>
-                    </ul>
-                </div>
-        </h1>
+    <div class="title">作品集展示</div>
+    <div id="portfolio"></div>
+    <div id="categories">
+        <div class="category"><a href="#1">平面</a></div>
+        <div class="category"><a href="#2">立體</a></div>
+        <div class="category"><a href="#3">手工</a></div>
     </div>
 
 
-    <script type="module">
 
-        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+    <div>
+        <div id="1"></div>
+        <p class="text">獲獎</p>
+        <p>
+            <img class="imgleft" src="./src/image25.jpg" alt="" />
+            <img class="imgleft" src="./src/image26.jpg" alt="">
+        </p>
+        <p class="content">澳門海關保護知識產權繪畫比賽 冠軍</p>
+        <p class="content">創作理念：漫畫</p>
+        <p>
+            <img class="imgleft" src="./src/image5.jpg" alt="" />
+            <img class="imgleft" src="./src/image9.jpg" alt="">
+        </p>
+        <p class="content">中華傳統文化推廣計畫青少年創新手繪中華文化特色口罩創作比賽2-華藝風貌中學組 季軍</p>
+        <p class="content">創作理念：青花瓷</p>
+        <p>
+            <img class="imgleft" src="./src/image10.jpg" alt="" />
+            <img class="imgleft" src="./src/image11.jpg" alt="">
+        </p>
+        <p class="content">「警察．形象」填色、繪畫及口號比賽 入圍獎及三等獎</p>
+        <p class="content">創作理念：剪影&漫畫</p>
+        <p>
+            <img class="imgleft" src="./src/image13.jpg" alt="" />
+            <img class="imgleft" src="./src/image19.jpg" alt="">
+        </p>
+        <p class="content">澳門無疆界青年協會 的擁抱「基本法」抱枕繪畫比賽 季軍</p>
+        <p class="content">創作理念：澳門街</p>
+        <p>
+            <img class="imgleft" src="./src/image2.jpg" alt="" />
+            <img class="imgleft" src="./src/image16.jpg" alt="">
+        </p>
+        <p class="content">Superior Culture 上‧文化的黑白繪畫大賽2023 亞軍</p>
+        <p class="content">創作理念：淚痕</p>
+        <p>
+            <img class="imgleft" src="./src/image15.jpg" alt="" />
+            <img class="imgleft" src="./src/image14.jpg" alt="">
+        </p>
+        <p class="content">第十二屆《小城影畫》攝影及繪畫填色比賽 優異獎</p>
+        <p class="content">創作理念：人和建築都共融</p>
+        <p>
+            <img class="imgleft" src="./src/image8.jpg" alt="" />
+            <img class="imgleft" src="./src/image51.jpg" alt="">
+        </p>
+        <p class="content">夢想童盟「童樂盃」2022—紅包設計比賽 入圍獎</p>
+        <p class="content">創作理念：兔年</p>
 
-        const app = createApp({
-            data() {
-                return {
-                    txt: 'blue'
-                }
-            },
-            methods: {
-                btn() { alert('Nice to meet you') }
-            }
-        })
+        <p class="text">練習</p>
+        <p>
+            <img class="imgleft" src="./src/image28.jpg" alt="" />
+            <img class="imgleft" src="./src/image1.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image52.jpg" alt="" />
+            <img class="imgleft" src="./src/image53.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image37.jpg" alt="" />
+            <img class="imgleft" src="./src/image27.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image29.jpg" alt="" />
+            <img class="imgleft" src="./src/image24.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image38.jpg" alt="" />
+            <img class="imgleft" src="./src/image3.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image20.jpg" alt="" />
+            <img class="imgleft" src="./src/image21.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image22.jpg" alt="" />
+            <img class="imgleft" src="./src/image36.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image30.jpg" alt="" />
+            <img class="imgleft" src="./src/image31.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image12.jpg" alt="" />
+           
+        </p>
+        <p class="text">海報</p>
+        <p>
+            <img class="imgleft" src="./src/image23.jpg" alt="" />
+            <img class="imgleft" src="./src/image32.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image33.jpg" alt="" />
+            <img class="imgleft" src="./src/image34.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image35.jpg" alt="" />
+            <img class="imgleft" src="./src/image17.jpg" alt="" />
+        </p>
 
-        app.mount('#app')
-    </script>
 
-    <script type="module">
+        <div id="2"></div>
+        <p class="text">獲獎</p>
+        <p>
+            <img class="imgleft" src="./src/image41.jpg" alt="" />
+            <img class="imgleft" src="./src/image54.jpg" alt="">
+        </p>
+        <p class="text">練習</p>
+        <p>
+            <img class="imgleft" src="./src/image6.jpg" alt="" />
+            <img class="imgleft" src="./src/image7.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image49.jpg" alt="" />
+            <img class="imgleft" src="./src/image50.jpg" alt="">
+        </p>
 
-        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+        <div id="3"></div>
+        <p class="text">手工</p>
+        <p>
+            <img class="imgleft" src="./src/image18.jpg" alt="" />
+            <img class="imgleft" src="./src/image39.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image40.jpg" alt="" />
+            <img class="imgleft" src="./src/image4.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image43.jpg" alt="" />
+            <img class="imgleft" src="./src/image44.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image45.jpg" alt="" />
+            <img class="imgleft" src="./src/image46.jpg" alt="">
+        </p>
+        <p>
+            <img class="imgleft" src="./src/image47.jpg" alt="" />
+        </p>
+        <p class="title">END</p>
+    </div>
 
-        const app2 = createApp({
-            data() {
-                return {
-                    awesome: true
-                }
-            },
-            methods: {
-                toggle() { this.awesome = !this.awesome }
-            }
-        })
-
-        app2.mount('#app2')
-    </script>
-
+    <div id="contact"></div>
+    <footer>
+        <p>Email: soumelodycat@gmail.com</p>
+        <p>Facebook: <a href="http://facebook.com">facebook.com/example</a></p>
+        <p>Instagram: <a href="http://instagram.com">instagram.com/example</a></p>
+    </footer>
+    <script src="script.js"></script>
 </body>
+<script> let slideIndex = 0; showSlides(); function showSlides() {
+        let slides = document.getElementsByClassName("slides")[0].getElementsByTagName("img"); for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; } slideIndex++; if
+            (slideIndex > slides.length) { slideIndex = 1 } slides[slideIndex - 1].style.display = "block"; setTimeout(showSlides, 5000);
+    } function changeSlide(n) { slideIndex += n - 1; showSlides(); }</script>
+
 
 </html>
